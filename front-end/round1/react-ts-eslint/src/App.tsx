@@ -1,8 +1,8 @@
 import React from 'react';
-import UseStateComponent from './page/useState';
-import UseEffectExample from './page/useEffect';
-import UseMemoComponent from './page/useMemo';
-import UseCallbackComponent from './page/useCallback';
+import UseStateComponent from './component/useState';
+import UseEffectExample from './component/useEffect';
+import UseMemoComponent from './component/useMemo';
+import UseCallbackComponent from './component/useCallback';
 
 function App() {
   return (

@@ -5,6 +5,7 @@ function sealed(constructor: Function) {
 }
 
 // 'Greeter' 클래스에 'sealed' 데코레이터를 적용합니다. 이로 인해 'Greeter' 클래스는 확장될 수 없게 됩니다.
+// @ts-ignore
 @sealed
 class Greeter {
     greeting: string;

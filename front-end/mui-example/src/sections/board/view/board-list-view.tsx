@@ -72,6 +72,8 @@ export default function BoardListView() {
 
   const settings = useSettingsContext();
 
+  //= DATA
+  const [selectedId, setSelectedId] = useState<number | undefined>();
   const [tableData, setTableData] = useState<IBoardItem[]>(board);
 
   const [filters, setFilters] = useState(defaultFilters);
@@ -153,6 +155,43 @@ export default function BoardListView() {
     setFilters(defaultFilters);
   }, []);
 
+  //= Popup
+  const openNew = useBoolean();
+  const openView = useBoolean();
+  const openEdit = useBoolean();
+  const openRowDeleteDiagram = useBoolean();
+  const openSelectedDeleteDiagram = useBoolean();
+
+
+  const handleCloseDrawer = () => {
+    openNew.onFalse();
+    openEdit.onFalse();
+    openView.onFalse();
+    setSelectedId(undefined);
+  };
+
+  const handleOpenNew = () => {
+    openNew.onTrue();
+    openEdit.onFalse();
+    openView.onFalse();
+    setSelectedId(undefined);
+  };
+
+  const handleOpenEdit = (id: number | undefined) => {
+    openNew.onFalse();
+    openEdit.onTrue();
+    openView.onFalse();
+    setSelectedId(id);
+  };
+
+  const handleOpenView = (id: number | undefined) => {
+    openNew.onFalse();
+    openEdit.onFalse();
+    openView.onTrue();
+    setSelectedId(id);
+  };
+
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -167,8 +206,7 @@ export default function BoardListView() {
           ]}
           action={
             <Button
-              component={RouterLink}
-              href={paths.dashboard.product.new}
+              onClick={() => handleOpenNew()}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >

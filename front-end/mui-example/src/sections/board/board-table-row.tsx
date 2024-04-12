@@ -129,7 +129,7 @@ export default function BoardTableRow({
           }}
         >
           <Iconify icon="solar:eye-bold" />
-          View
+          상세 보기
         </MenuItem>
 
         <MenuItem
@@ -139,7 +139,7 @@ export default function BoardTableRow({
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          수정
         </MenuItem>
 
         <MenuItem
@@ -150,7 +150,7 @@ export default function BoardTableRow({
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          삭제
         </MenuItem>
       </CustomPopover>
 

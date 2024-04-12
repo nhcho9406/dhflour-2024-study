@@ -1,0 +1,42 @@
+{
+  "id": 7,
+  "title": {
+    "en": "",
+    "ja": "",
+    "ko": "코로나19 예방 수칙 안내",
+    "zhCn": "",
+    "zhTw": ""
+  },
+  "content": {
+    "en": "",
+    "ja": "",
+    "ko": "<p>코로나19 예방을 위해 마스크 착용 및 손 소독을 권장합니다. 모두의 안전을 위해 협조 부탁드립니다.</p>",
+    "zhCn": "",
+    "zhTw": ""
+  },
+  "top": false,
+  "pageView": 0,
+  "type": "NOTICE",
+  "createdTime": "2024-04-12T10:53:09.400Z",
+  "createdBy": 6,
+  "updatedTime": "2024-04-12T10:53:09.400Z",
+  "updatedBy": 6,
+  "categories": [
+    {
+      "id": 3,
+      "name": {
+        "en": "",
+        "ja": "",
+        "ko": "긴급",
+        "zhCn": "",
+        "zhTw": ""
+      },
+      "type": "NOTICE",
+      "orderBy": 3,
+      "createdTime": "2024-04-12T10:51:31.390Z",
+      "createdBy": 6,
+      "updatedTime": "2024-04-12T10:51:31.390Z",
+      "updatedBy": 6
+    }
+  ]
+}

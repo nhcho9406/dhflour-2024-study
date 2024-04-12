@@ -74,6 +74,15 @@ export default function App() {
             themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
             themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
             themeStretch: false,
+            systemLanguage: {
+              ko: true,
+              en: false,
+              zhCn: false,
+              zhTw: false,
+              ja: false,
+            },
+            systemMultilingual: false,
+            systemDefaultLanguage: 'ko'
           }}
         >
           <ThemeProvider>

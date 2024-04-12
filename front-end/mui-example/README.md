@@ -11,3 +11,6 @@
 
 - npm i OR npm i --legacy-peer-deps
 - npm start
+
+## Dashboard 의 경로 설정
+- /src/routes/sections/dashboard.tsx

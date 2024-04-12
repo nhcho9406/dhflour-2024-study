@@ -6,6 +6,8 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
+import {BoardManagerProvider} from "../../sections/board/board-manage-provider";
+import {SampleManageProvider} from "../../sections/sample/sample-manage-provider";
 
 // ----------------------------------------------------------------------
 // SAMPLE PAGE
@@ -90,17 +92,14 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
-      { path: 'samplePage1', element: <SamplePage1 /> },
+
+      { path: 'samplePage1', element: <SampleManageProvider><SamplePage1 /></SampleManageProvider> },
       { path: 'samplePage2', element: <SamplePage2 /> },
       { path: 'formEx', element: <FormExViewPage /> },
       {
         path: 'board',
         children: [
-          { element: <BoardListPage />, index: true },
-          { path: 'list', element: <ProductListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'new', element: <ProductCreatePage /> },
-          { path: ':id/edit', element: <ProductEditPage /> },
+          { element: <BoardManagerProvider><BoardListPage /></BoardManagerProvider>, index: true },
         ],
       },
       {

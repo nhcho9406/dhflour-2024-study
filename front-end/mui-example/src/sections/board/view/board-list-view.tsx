@@ -1,159 +1,84 @@
-import isEqual from 'lodash/isEqual';
-import { useState, useEffect, useCallback } from 'react';
-// @mui
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
-// routes
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
-// hooks
-import { useBoolean } from 'src/hooks/use-boolean';
-// api
-import { useGetProducts } from 'src/api/product';
-// components
-import { useSettingsContext } from 'src/components/settings';
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Button, Card, Container, Table, TableBody, TableContainer} from "@mui/material";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import {useSettingsContext} from "src/components/settings";
 import {
-  useTable,
-  getComparator,
   emptyRows,
-  TableNoData,
-  TableSkeleton,
+  getComparator,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
+  TableNoData,
+  TablePaginationActions,
   TablePaginationCustom,
-} from 'src/components/table';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-// types
-//
-import BoardTableRow from '../board-table-row';
-import ProductTableFiltersResult from '../product-table-filters-result';
-import BoardTableToolbar from "../board-table-toolbar";
-import {IBoardFilterValue, IBoardItem, IBoardTableFilters} from "../../../types/board";
-import {board} from "../../../_mock/map/board";
+  TableSelectedAction,
+  TableSkeletonAll
+} from "src/components/hyperx/table";
+import {BoardTableRow} from "src/sections/board/index";
+import TableSelectedDeleteDiagram from "src/components/hyperx/table/table-selected-delete-diagram";
+import {useSnackbar} from "src/components/snackbar";
+import BoardTableToolbar from "src/sections/board/board-table-toolbar";
+import {transformSortJSON} from "src/components/hyperx/table/use-table";
+import {DrawerWrapper} from "src/components/hyperx/drawer";
+import TableRowDeleteDiagram from "src/components/hyperx/table/table-row-delete-diagram";
+import BoardTableAction from "src/components/board/board-table-action";
+import isEqual from "lodash/isEqual";
+import {useBoolean} from "src/hooks/use-boolean";
+import BoardTableFiltersResult from "../board-table-filters-result";
+import {paths, ROOT_PAGE_NAME} from "../../../routes/paths";
+import {fISO} from "../../../utils/format-time";
+import {applyFilter, useBoardManagerContext} from "../board-manage-provider";
+import BoardNewEditForm from "./board-new-edit-form";
+import BoardViewBody from "./board-view-body";
+import {BoardCategoryDTO, BoardDTO} from "../../../types/board";
+import axios from "axios";
 
 // ----------------------------------------------------------------------
+const BOARD_TYPE = "NOTICE";
+
 
 const TABLE_HEAD = [
-  {id: "id", label: "ID", align: "left", width: 60},
-  {id: "title", label: "제목", align: "left"},
-  {id: "categories.name", label: "카테고리", align: "center",width: 100},
-  {id: "top", label: "상단고정", align: "center", width: 100},
-  {id: "pageView", label: "조회 수", align: "center", width: 100},
-  {id: "createdTime", label: "등록일시", align: "center", width: 160},
-  {id: "",width: 60},
+  {id: "id", label: "ID", align: "left"},
+  {id: "title", label: "제목", align: "left", width: 220},
+  {id: "categories.name", label: "카테고리", align: "center"},
+  {id: "top", label: "상단고정", align: "center"},
+  {id: "pageView", label: "페이지 뷰", align: "center"},
+  {id: "createdTime", label: "등록시간", align: "center"},
+  {id: ""},
 ];
-const BOARD_CATEGORY_OPTIONS = [
-  { value: 'notice', label: '공지' },
-  { value: 'news', label: '뉴스' },
-]
-const defaultFilters: IBoardTableFilters = {
-  category: [],
-  startDate: null,
-  endDate: null,
-};
 
-// ----------------------------------------------------------------------
+type Props = {
+  pageName: string;
+}
 
-export default function BoardListView() {
-  const router = useRouter();
+export default function BoardListView({pageName}: Props) {
+  const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {themeStretch, systemLanguage, systemMultilingual, systemDefaultLanguage} = useSettingsContext();
+  const {enqueueSnackbar} = useSnackbar();
+  const {
+    table,
+    denseHeight,
 
-  const table = useTable();
-
-  const settings = useSettingsContext();
-
-  //= DATA
-  const [selectedId, setSelectedId] = useState<number | undefined>();
-  const [tableData, setTableData] = useState<IBoardItem[]>(board);
-
-  const [filters, setFilters] = useState(defaultFilters);
-
-  const { products, productsLoading, productsEmpty } = useGetProducts();
-
-  const confirm = useBoolean();
-
-  useEffect(() => {
-    if (products.length) {
-      // setTableData(products);
-    }
-  }, [products]);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(table.order, table.orderBy),
+    defaultFilters,
     filters,
-  });
+    handleFilters,
+    handleResetFilters,
 
-  const dataInPage = dataFiltered.slice(
-    table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
-  );
+    searchParams,
+    paramQuery,
+    paramStartDate,
+    paramEndDate,
+  } = useBoardManagerContext();
 
-  const denseHeight = table.dense ? 60 : 80;
-
-  const canReset = !isEqual(defaultFilters, filters);
-
-  const notFound = (!dataFiltered.length && canReset) || productsEmpty;
-
-  const handleFilters = useCallback(
-    (name: string, value: IBoardFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
-
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
-
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-  const handleEditRow = useCallback(
-    (id: string) => {
-      router.push(paths.dashboard.product.edit(id));
-    },
-    [router]
-  );
-
-  const handleViewRow = useCallback(
-    (id: string) => {
-      router.push(paths.dashboard.product.details(id));
-    },
-    [router]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
+  //= Loading State
+  const [listDataLoading, setListDataLoading] = useState<boolean>(false);
+  const [detailDataLoading, setDetailDataLoading] = useState<boolean>(false);
+  const [detailData, setDetailData] = useState<BoardDTO>();
+  const [categoryDataLoading, setCategoryDataLoading] = useState<boolean>(false);
+  const [categories, setCategories] = useState<BoardCategoryDTO[]>([]);
 
   //= Popup
   const openNew = useBoolean();
@@ -162,6 +87,85 @@ export default function BoardListView() {
   const openRowDeleteDiagram = useBoolean();
   const openSelectedDeleteDiagram = useBoolean();
 
+  //= DATA
+  const [selectedId, setSelectedId] = useState<number | undefined>();
+  const [tableData, setTableData] = useState<BoardDTO[]>([]);
+
+  const dateError = filters.startDate && filters.endDate ? filters.startDate.getTime() > filters.endDate.getTime() : false;
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(table.order, table.orderBy),
+    filters,
+    dateError,
+  });
+
+  const canReset = !isEqual(defaultFilters, filters);
+  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+
+  const loadData = async () => {
+    setListDataLoading(true);
+    setTableData([]);
+    let _query = '';
+    if (filters.query && filters.query.length > 1) {
+      _query = filters.query;
+    }
+    // const {data} = await Swagger.api.boardPage({
+    //     type: BOARD_TYPE,
+    //     size: table.rowsPerPage,
+    //     page: table.page + 1,
+    //     query: _query,
+    //     startTime: fISO(filters.startDate),
+    //     endTime: fISO(filters.endDate),
+    //     categoryIds: filters.categories !== undefined ? filters.categories.map((category) => category.id).filter((id) => id !== undefined) : [],
+    //     orderBy:
+    //         table.orderBy &&
+    //         transformSortJSON(
+    //             JSON.stringify({
+    //                 [table.orderBy]: table.order,
+    //             }),
+    //         ),
+    // });
+    console.log(table.rowsPerPage, 'table.rowsPerPage');
+    console.log(table.page + 1, 'table.page + 1');
+    const {data} = await axios.get('/mock/board-ex.json');
+    console.log(data, 'board');
+    setTableData(data.items);
+    table.setPageMetadata(data.metadata);
+    setListDataLoading(false);
+  };
+
+  const loadCategoryData = async () => {
+    setCategoryDataLoading(true);
+    try {
+      // const {data} = await Swagger.api.boardCategories({type: "NOTICE"});
+      // if (data && data.items) {
+      //     setCategories(data.items);
+      // }
+      const {data} = await axios.get('/mock/category-ex.json');
+      if (data && data.items) {
+          setCategories(data.items);
+      }
+      handleFilters("categories", []);
+    } catch (e) {
+      console.error(e);
+    }
+    setCategoryDataLoading(false);
+  };
+
+  const loadDetailData = async (id: number) => {
+    setDetailDataLoading(true);
+    // const {data} = await Swagger.api.boardGet(id);
+    // setDetailData(data);
+    const {data} = await axios.get('/mock/board-detail-ex.json');
+    setDetailData(data);
+    setDetailDataLoading(false);
+  };
+
+  const handleReset = async () => {
+    loadData();
+    loadCategoryData();
+  };
 
   const handleCloseDrawer = () => {
     openNew.onFalse();
@@ -191,52 +195,155 @@ export default function BoardListView() {
     setSelectedId(id);
   };
 
+  const handleDeleteRows = async (selectedRows: number[]) => {
+    try {
+      // const {data} = await Swagger.api.boardDeleteByIds(selectedRows);
+      // table.setSelected([]);
+      // enqueueSnackbar(data.message, {variant: "success"});
+      enqueueSnackbar('데이터가 삭제되었습니다.', {variant: "success"});
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar(e.message, {variant: "error"});
+    }
+    handleReset().then(() => {console.log('Completed reset')});
+    openSelectedDeleteDiagram.onFalse()
+  };
+
+  const handleDeleteRow = async (id: number | undefined) => {
+    if (id) {
+      try {
+        // const {data} = await Swagger.api.boardDelete(id);
+        // enqueueSnackbar(data.message, {variant: "success"});
+        enqueueSnackbar('데이터가 삭제되었습니다.', {variant: "success"});
+        handleCloseDrawer();
+        handleReset().then(() => {console.log('Completed reset')});
+      } catch (e) {
+        console.error(e);
+        enqueueSnackbar(e.message, {variant: "error"});
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadCategoryData().then(() => {console.log('loadedCategory Data')});
+  }, []);
+
+  useEffect(() => {
+    updateSearchParams(); // Update search parameters
+    loadData().then(() => {console.log('loaded default Data')});
+    navigate(`?${searchParams.toString()}`); // Update the URL with the current search parameters
+
+  }, [
+    table.rowsPerPage,
+    table.page,
+    table.orderBy,
+    table.order,
+    filters.query,
+    filters.startDate,
+    filters.endDate,
+    filters.categories,
+    categories
+  ]);
+
+  function updateSearchParams() {
+    searchParams.set("page", String(table.page));
+    searchParams.set("size", String(table.rowsPerPage));
+
+    if (filters.query) {
+      searchParams.set("query", String(filters.query));
+    }
+    if (filters.startDate && !Number.isNaN(filters.startDate.getTime())) {
+      searchParams.set("startTime", filters.startDate.toISOString());
+    }
+    if (filters.endDate && !Number.isNaN(filters.endDate.getTime())) {
+      searchParams.set("endTime", filters.endDate.toISOString());
+    }
+  }
+
+  useEffect(() => {
+    if (paramQuery) {
+      handleFilters("query", paramQuery);
+    }
+    if (paramStartDate) {
+      try {
+        const startDate: Date = new Date(decodeURIComponent(paramStartDate));
+        if (Number.isNaN(startDate.getTime())) {
+          handleFilters("startDate", startDate);
+        }
+      } catch (e) {
+        console.error('e', e);
+      }
+    }
+    if (paramEndDate) {
+      try {
+        const endDate: Date = new Date(decodeURIComponent(paramEndDate));
+        if (Number.isNaN(endDate.getTime())) {
+          handleFilters("endDate", endDate);
+        }
+      } catch (e) {
+        console.error('e', e);
+      }
+    }
+
+  }, [paramQuery, paramStartDate, paramEndDate]);
+
+  useEffect(() => {
+    if (selectedId) {
+      loadDetailData(selectedId);
+    } else {
+      setDetailData(undefined);
+    }
+  }, [selectedId]);
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : "lg"}>
         <CustomBreadcrumbs
-          heading="공지사항"
+          heading={pageName}
           links={[
-            { name: '콘텐츠', href: paths.dashboard.board.root },
             {
-              name: '공지사항',
-              // href: paths.dashboard.board.root,
+              name: ROOT_PAGE_NAME,
+              href: paths.dashboard.root,
+            },
+            {
+              name: pageName,
             },
           ]}
           action={
             <Button
               onClick={() => handleOpenNew()}
               variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
+              startIcon={<Iconify icon="eva:plus-fill"/>}
             >
               새글 작성
             </Button>
           }
-          sx={{ mb: { xs: 3, md: 5 } }}
         />
 
-        <Card>
+        <Card
+          sx={{
+            mt: {xs: 3, md: 5},
+            mb: {xs: 3, md: 5},
+          }}
+        >
           <BoardTableToolbar
             filters={filters}
             onFilters={handleFilters}
-            //
-            categoryOptions={BOARD_CATEGORY_OPTIONS}
+            dateError={dateError}
+            categoryOptions={categories}
           />
 
           {canReset && (
-            <ProductTableFiltersResult
+            <BoardTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
-              //
               onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
+              results={table.metadata.total}
+              sx={{p: 2.5, pt: 0}}
             />
           )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{position: "relative", overflow: "unset"}}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -244,20 +351,20 @@ export default function BoardListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row.id),
                 )
               }
               action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
+                <BoardTableAction
+                  onOpenSelectedDeleteDiagram={() => openSelectedDeleteDiagram.onTrue()}/>
               }
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table
+                size={table.dense ? "small" : "medium"}
+                sx={{minWidth: 800}}
+              >
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -268,113 +375,139 @@ export default function BoardListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row.id),
                     )
                   }
                 />
-
                 <TableBody>
-                  {productsLoading ? (
-                    [...Array(table.rowsPerPage)].map((i, index) => (
-                      <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    ))
-                  ) : (
-                    <>
-                      {dataFiltered
-                        .slice(
-                          table.page * table.rowsPerPage,
-                          table.page * table.rowsPerPage + table.rowsPerPage
-                        )
-                        .map((row) => (
-                          <BoardTableRow
-                            key={row.id}
-                            row={row}
-                            selected={table.selected.includes(row.id)}
-                            onSelectRow={() => table.onSelectRow(row.id)}
-                            onDeleteRow={() => handleDeleteRow(row.id)}
-                            onEditRow={() => handleEditRow(row.id)}
-                            onViewRow={() => handleViewRow(row.id)}
-                          />
-                        ))}
-                    </>
+                  {!listDataLoading &&
+                    dataFiltered.map((item: BoardDTO, index: number) => (
+                      <BoardTableRow
+                        key={item.id}
+                        row={item}
+                        selected={table.selected.includes(item.id)}
+                        onSelectRow={() => table.onSelectRow(item.id)}
+                        onViewRow={() => handleOpenView(item.id)}
+                        onEditRow={() => handleOpenEdit(item.id)}
+                        onRefreshData={() => handleReset()}
+                      />
+                    ))}
+                  {!listDataLoading && table.metadata.total > 0 && (
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(
+                        table.page,
+                        table.rowsPerPage,
+                        table.metadata.total,
+                      )}
+                    />
                   )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData notFound={notFound} />
+                  {!listDataLoading && <TableNoData notFound={notFound}/>}
+                  {listDataLoading && (dataFiltered.length === 0) && (
+                    <TableSkeletonAll
+                      size={table.metadata.size}
+                      denseHeight={denseHeight}
+                    />
+                  )}
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
+            count={table.metadata.total}
+            colSpan={3}
+            page={table.metadata.currentPage - 1}
+            rowsPerPage={table.metadata.size}
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
             dense={table.dense}
             onChangeDense={table.onChangeDense}
+            ActionsComponent={TablePaginationActions}
           />
         </Card>
+
       </Container>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
+      <TableSelectedDeleteDiagram
+        open={openSelectedDeleteDiagram.value}
+        onClose={() => openSelectedDeleteDiagram.onFalse()}
+        onDeleteSelected={() => {
+          handleDeleteRows(table.selected);
+        }}
+        selected={table.selected}
+      />
+
+      {/* === Drawer === */}
+      <DrawerWrapper
+        title="새글 작성"
+        open={openNew.value}
+        onClose={handleCloseDrawer}
+        children={
+          <BoardNewEditForm categories={categories} onEnd={() => {
+            handleCloseDrawer();
+            handleReset();
+          }}/>}
+      />
+
+      <DrawerWrapper
+        loading={detailDataLoading}
+        title="상세 보기"
+        open={openView.value}
+        onClose={handleCloseDrawer}
+        onEdit={() => handleOpenEdit(selectedId)}
+        onDelete={() => {
+          openRowDeleteDiagram.onTrue();
+        }}
+        children={detailData && <BoardViewBody data={detailData}/>}
+      />
+
+      <DrawerWrapper
+        loading={detailDataLoading}
+        title="수정 하기"
+        open={openEdit.value}
+        onClose={handleCloseDrawer}
+        onView={() => handleOpenView(selectedId)}
+        onDelete={() => {
+          openRowDeleteDiagram.onTrue();
+        }}
+        children={detailData &&
+          <BoardNewEditForm
+            isEdit
+            id={detailData.id}
+            currentData={{
+              title: typeof detailData.title === 'string' ? {
+                ko: detailData.title,
+                en: '',
+                zhCn: '',
+                zhTw: '',
+                ja: ''
+              } : detailData.title,
+              content: typeof detailData.content === 'string' ? {
+                ko: detailData.content,
+                en: '',
+                zhCn: '',
+                zhTw: '',
+                ja: ''
+              } : detailData.content,
+              categoryIds: detailData.categories && detailData.categories.map((c) => c.id),
+              top: detailData.top
+            }} categories={categories} onEnd={() => {
+            handleReset();
+            if (selectedId) loadDetailData(selectedId);
+          }}/>
         }
       />
+
+      {/* === Delete === */}
+      {selectedId && (
+        <TableRowDeleteDiagram
+          open={openRowDeleteDiagram.value}
+          dataId={selectedId}
+          onClose={() => openRowDeleteDiagram.onFalse()}
+          onDeleteRow={() => handleDeleteRow(selectedId)}
+        />
+      )}
     </>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter({
-  inputData,
-  comparator,
-  filters,
-}: {
-  inputData: IBoardItem[];
-  comparator: (a: any, b: any) => number;
-  filters: IBoardTableFilters;
-}) {
-  const { category } = filters;
-
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (category.length) {
-    // inputData = inputData.filter((product) => category.includes(product.inventoryType));
-  }
-
-  return inputData;
 }

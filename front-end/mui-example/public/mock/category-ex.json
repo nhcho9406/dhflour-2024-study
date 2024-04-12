@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": {
+      "en": "",
+      "ja": "",
+      "ko": "일반",
+      "zhCn": "",
+      "zhTw": ""
+    },
+    "type": "NOTICE",
+    "orderBy": 1,
+    "createdTime": "2024-04-12T10:51:19.801Z",
+    "createdBy": 6,
+    "updatedTime": "2024-04-12T10:51:19.801Z",
+    "updatedBy": 6
+  },
+  {
+    "id": 2,
+    "name": {
+      "en": "",
+      "ja": "",
+      "ko": "점검",
+      "zhCn": "",
+      "zhTw": ""
+    },
+    "type": "NOTICE",
+    "orderBy": 2,
+    "createdTime": "2024-04-12T10:51:25.967Z",
+    "createdBy": 6,
+    "updatedTime": "2024-04-12T10:51:25.967Z",
+    "updatedBy": 6
+  },
+  {
+    "id": 3,
+    "name": {
+      "en": "",
+      "ja": "",
+      "ko": "긴급",
+      "zhCn": "",
+      "zhTw": ""
+    },
+    "type": "NOTICE",
+    "orderBy": 3,
+    "createdTime": "2024-04-12T10:51:31.390Z",
+    "createdBy": 6,
+    "updatedTime": "2024-04-12T10:51:31.390Z",
+    "updatedBy": 6
+  }
+]

@@ -1,4 +1,11 @@
 // ----------------------------------------------------------------------
+export interface LanguageSetting {
+  ko: boolean;
+  en: boolean;
+  zhCn: boolean;
+  zhTw: boolean;
+  ja: boolean;
+}
 
 export type SettingsValueProps = {
   themeStretch: boolean;
@@ -7,6 +14,9 @@ export type SettingsValueProps = {
   themeContrast: 'default' | 'bold';
   themeLayout: 'vertical' | 'horizontal' | 'mini';
   themeColorPresets: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
+  systemMultilingual: boolean;
+  systemLanguage: LanguageSetting;
+  systemDefaultLanguage: "ko" | "en" | "zhCn" | "znTw" | "ja";
 };
 
 export type SettingsContextProps = SettingsValueProps & {

@@ -8,10 +8,11 @@ import Editor, { EditorProps } from '../editor';
 // ----------------------------------------------------------------------
 
 interface Props extends EditorProps {
+  editorId?: string;
   name: string;
 }
 
-export default function RHFEditor({ name, helperText, ...other }: Props) {
+export default function RHFEditor({ editorId, name, helperText, ...other }: Props) {
   const {
     control,
     watch,
@@ -35,7 +36,7 @@ export default function RHFEditor({ name, helperText, ...other }: Props) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Editor
-          id={name}
+          id={editorId || name}
           value={field.value}
           onChange={field.onChange}
           error={!!error}

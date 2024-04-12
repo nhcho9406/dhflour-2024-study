@@ -34,7 +34,7 @@ export default function SamplePage1() {
           >
             Click
           </Button>
-          
+
           <Divider />
 
           <TextField

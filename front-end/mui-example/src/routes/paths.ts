@@ -119,9 +119,9 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
-    formEx: {
-      root: `${ROOTS.DASHBOARD}/formEx`,
-    },
+    samplePage1: `${ROOTS.DASHBOARD}/samplePage1`,
+    samplePage2: `${ROOTS.DASHBOARD}/samplePage2`,
+    formEx: `${ROOTS.DASHBOARD}/formEx`,
     board: {
       root: `${ROOTS.DASHBOARD}/board`,
       new: `${ROOTS.DASHBOARD}/board/new`,

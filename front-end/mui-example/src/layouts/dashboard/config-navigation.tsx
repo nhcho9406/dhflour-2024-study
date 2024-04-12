@@ -66,8 +66,18 @@ export function useNavData() {
           },
           {
             title: 'React Form',
-            path:  paths.dashboard.formEx.root,
+            path:  paths.dashboard.formEx,
             icon: ICONS.formEx,
+          },
+          {
+            title: 'sample Page 1',
+            path:  paths.dashboard.samplePage1,
+            icon: ICONS.blank,
+          },
+          {
+            title: 'sample Page 2',
+            path:  paths.dashboard.samplePage2,
+            icon: ICONS.blank,
           },
         ],
       },

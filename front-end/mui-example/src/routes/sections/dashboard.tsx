@@ -8,8 +8,11 @@ import DashboardLayout from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
+// SAMPLE PAGE
+const SamplePage1 = lazy(() => import('src/pages/dashboard/samplePage1'));
+const SamplePage2 = lazy(() => import('src/pages/dashboard/samplePage2'));
 // FORM EX
-const FormExViewPage = lazy(() => import('src/pages/dashboard/formEx/list'));
+const FormExViewPage = lazy(() => import('src/pages/dashboard/formEx'));
 // BOARD
 const BoardListPage = lazy(() => import('src/pages/dashboard/board/list'));
 // OVERVIEW
@@ -87,6 +90,8 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
+      { path: 'samplePage1', element: <SamplePage1 /> },
+      { path: 'samplePage2', element: <SamplePage2 /> },
       { path: 'formEx', element: <FormExViewPage /> },
       {
         path: 'board',

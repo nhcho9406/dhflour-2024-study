@@ -43,6 +43,8 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
+  board: icon('ic_blog'),
+  formEx:icon("ic_file")
 };
 
 // ----------------------------------------------------------------------
@@ -60,7 +62,12 @@ export function useNavData() {
           {
             title: '공지사항',
             path:  paths.dashboard.board.root,
-            icon: ICONS.dashboard,
+            icon: ICONS.blog,
+          },
+          {
+            title: 'React Form',
+            path:  paths.dashboard.formEx.root,
+            icon: ICONS.formEx,
           },
         ],
       },

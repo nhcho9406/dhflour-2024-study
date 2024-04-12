@@ -8,6 +8,8 @@ import DashboardLayout from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
+// FORM EX
+const FormExViewPage = lazy(() => import('src/pages/dashboard/formEx/list'));
 // BOARD
 const BoardListPage = lazy(() => import('src/pages/dashboard/board/list'));
 // OVERVIEW
@@ -85,6 +87,7 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
+      { path: 'formEx', element: <FormExViewPage /> },
       {
         path: 'board',
         children: [

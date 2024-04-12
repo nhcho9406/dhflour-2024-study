@@ -5,12 +5,10 @@ import {useSampleManagerContext} from "../../sections/sample/sample-manage-provi
 import Iconify from "../../components/iconify";
 import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
-import {Divider, TextField} from '@mui/material';
-import Sample1Component1 from "../../components/sample1/sample1Component1";
-import Sample1Component2 from "../../components/sample1/sample1Component2";
+import {Divider} from '@mui/material';
 
 // ----------------------------------------------------------------------
-export default function SamplePage1() {
+export default function ReactHookSample() {
 // useSampleManagerContext 훅을 사용하여 컨텍스트로부터 필요한 값을 가져옵니다.
   const {param1, param2, param3, handleMethod} = useSampleManagerContext();
 
@@ -18,15 +16,27 @@ export default function SamplePage1() {
   return (
     <>
       <Helmet>
-        <title>React Hook Sample 2</title>
+        <title>SamplePage1</title>
       </Helmet>
 
       <Container>
         <Stack spacing={3}>
-          <Typography variant="h4">SamplePage1</Typography>
+          <Typography variant="h4">ReactHook Sample</Typography>
 
-          <Sample1Component1/>
-          <Sample1Component2/>
+          <Typography>{`param1 = ${param1}, param2 = ${param2}, param3 = ${param3}`}</Typography>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleMethod('Click!');
+            }}
+            startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+          >
+            Click
+          </Button>
+
+          <Divider/>
 
         </Stack>
       </Container>

@@ -14,6 +14,7 @@
 
 ## 공지사항 게시판 의 경로 설정
 - /src/routes/sections/dashboard.tsx : 페이지 경로 설정
+- /src/layouts/config-navigation.tsx : 대시보드 메뉴 관리
 - /public/mock/**.json : 공지사항 게시판의 목업용 데이터
 - /src/pages/dashboard/board/list.tsx : 공지사항 게시판 시작 Node
 - /src/components/board/**.tsx : 공지사항 게시판의 콤포넌트

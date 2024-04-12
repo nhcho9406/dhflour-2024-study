@@ -63,7 +63,7 @@ export function SampleManageProvider({children}: ManagerProviderProps) {
   // 파라미터 이름을 출력하고 알림을 띄우는 메서드를 useCallback으로 메모이제이션합니다.
   const handleMethod = useCallback((name: string) => {
       console.log(name, 'name');
-      enqueueSnackbar('Hello!')
+      enqueueSnackbar('Hello!');
     },
     []
   );

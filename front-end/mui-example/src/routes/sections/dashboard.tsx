@@ -8,6 +8,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {BoardManagerProvider} from "../../sections/board/board-manage-provider";
 import {SampleManageProvider} from "../../sections/sample/sample-manage-provider";
+import ReactHookSample from "../../pages/dashboard/reactHookSample";
 
 // ----------------------------------------------------------------------
 // SAMPLE PAGE
@@ -93,6 +94,8 @@ export const dashboardRoutes = [
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
 
+      { path: 'reactHookeSample', element: <ReactHookSample /> },
+      // { path: 'reactHookeSample', element: <SampleManageProvider><ReactHookSample /></SampleManageProvider> },
       { path: 'samplePage1', element: <SampleManageProvider><SamplePage1 /></SampleManageProvider> },
       { path: 'samplePage2', element: <SamplePage2 /> },
       { path: 'formEx', element: <FormExViewPage /> },

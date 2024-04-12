@@ -120,6 +120,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    reactHookeSample: `${ROOTS.DASHBOARD}/reactHookeSample`,
     samplePage1: `${ROOTS.DASHBOARD}/samplePage1`,
     samplePage2: `${ROOTS.DASHBOARD}/samplePage2`,
     formEx: `${ROOTS.DASHBOARD}/formEx`,

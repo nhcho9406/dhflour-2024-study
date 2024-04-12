@@ -70,12 +70,17 @@ export function useNavData() {
             icon: ICONS.formEx,
           },
           {
-            title: 'sample Page 1',
+            title: 'React Hook Sample 1',
+            path:  paths.dashboard.reactHookeSample,
+            icon: ICONS.blank,
+          },
+          {
+            title: 'React Hook Sample 2',
             path:  paths.dashboard.samplePage1,
             icon: ICONS.blank,
           },
           {
-            title: 'sample Page 2',
+            title: 'React Hook Sample 3',
             path:  paths.dashboard.samplePage2,
             icon: ICONS.blank,
           },

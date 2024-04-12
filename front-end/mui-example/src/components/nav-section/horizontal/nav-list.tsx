@@ -34,7 +34,6 @@ export default function NavList({ data, depth, hasChild, config }: NavListRootPr
     if (open) {
       handleClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {

@@ -64,7 +64,6 @@ export function CheckoutProvider({ children }: Props) {
     setValue('discount', values.items.length ? values.discount : 0);
     setValue('shipping', values.items.length ? values.shipping : 0);
     setValue('total', values.subTotal - values.discount + values.shipping);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     values.items,
     values.activeStep,

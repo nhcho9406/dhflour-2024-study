@@ -55,7 +55,6 @@ export default function ChatRoom({ participants, conversation }: Props) {
     } else {
       onOpenMobile();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lgUp]);
 
   const group = participants.length > 1;

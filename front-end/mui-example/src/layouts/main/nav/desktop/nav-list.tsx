@@ -35,7 +35,6 @@ export default function NavList({ item, offsetTop }: NavListProps) {
     if (nav.value) {
       nav.onFalse();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const handleOpenMenu = () => {

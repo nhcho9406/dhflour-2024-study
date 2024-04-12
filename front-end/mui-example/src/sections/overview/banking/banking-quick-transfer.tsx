@@ -100,7 +100,6 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     if (amount) {
       handleAutoWidth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
   const handleAutoWidth = useCallback(() => {

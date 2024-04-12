@@ -26,7 +26,6 @@ export default function NavMobile({ offsetTop, data }: NavProps) {
     if (nav.value) {
       nav.onFalse();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return (

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Button, Typography, AppBar, Grid, Paper, ThemeProvider, createTheme } from '@mui/material';
 
 const theme = createTheme({
@@ -12,7 +11,6 @@ const theme = createTheme({
     },
   },
 });
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -36,5 +34,4 @@ function App() {
     </ThemeProvider>
   );
 }
-
 export default App;

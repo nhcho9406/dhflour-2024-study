@@ -10,6 +10,9 @@ function App() {
       <div className="App">
         <nav>
           <ul>
+            <li>
+              <a href='/about' rel="noreferrer">naver</a>
+            </li>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/contact">Contact</Link></li>

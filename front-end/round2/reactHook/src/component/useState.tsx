@@ -4,7 +4,13 @@ import React, { useState } from 'react';
 function UseStateComponent() {
   // count 상태와 setCount 함수를 선언하여 상태를 관리
   const [count, setCount] = useState(0);
+  //  문자열 => ""
+  // const [count, setCount] = useState("");
 
+  //  배열 => []
+  // const [count, setCount] = useState([]);
+
+  console.log('count', count);
   // count 상태를 증가시키는 함수
   const incrementCount = () => {
     setCount(count + 1);
